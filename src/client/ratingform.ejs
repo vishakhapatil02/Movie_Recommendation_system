@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Rate Movie</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+
+  <style>
+  :root {
+    --primary-color: #343a40;
+    --accent-color: #1c2950;
+    --success-color: #27ae60;
+    --text-light: rgba(255, 255, 255, 0.9);
+    --warning-bg: #fef5e7;
+    --warning-text: #e67e22;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(to bottom right, var(--primary-color), var(--accent-color));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: var(--text-light);
+  }
+
+  .rating-container {
+    background-color: #ffffff;
+    padding: 30px 35px;
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+    animation: fadeIn 0.5s ease;
+    color: #2c3e50;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  h2 {
+    margin-bottom: 20px;
+    color: var(--accent-color);
+    font-size: 24px;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  label {
+    text-align: left;
+    font-weight: 600;
+    color: #34495e;
+    margin-bottom: 6px;
+  }
+
+  input[type="number"] {
+    padding: 10px 12px;
+    border: 1px solid #d0d3d4;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+  }
+
+  input[type="number"]:focus {
+    outline: none;
+    border-color: var(--success-color);
+  }
+
+  button[type="submit"] {
+    background-color: var(--success-color);
+    color: white;
+    font-size: 16px;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  button[type="submit"]:hover {
+    background-color: #1f9d53;
+  }
+
+  .previous-rating {
+    margin-top: 14px;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--warning-text);
+    background-color: var(--warning-bg);
+    padding: 10px;
+    border-radius: 6px;
+  }
+
+  .star-display {
+    margin-top: 10px;
+    font-size: 22px;
+  }
+
+  .star-display span {
+    color: lightgray;
+  }
+
+  .star-display .filled {
+    color: gold;
+  }
+
+  @media (max-width: 480px) {
+    .rating-container {
+      margin: 16px;
+      padding: 24px;
+    }
+
+    h2 {
+      font-size: 20px;
+    }
+
+    button, input {
+      font-size: 14px;
+    }
+  }
+</style>
+
+</head>
+
+<body>
+  <div class="rating-container">
+    <h2>⭐ Rate: <%= movie.title %></h2>
+
+    <form action="/movies/rate" method="POST">
+      <input type="hidden" name="movie_id" value="<%= movie.movie_id %>" />
+      <input type="hidden" name="user_id" value="<%= user?.user_id %>" />
+
+      <label for="rating">Give your rating (1-5):</label>
+      <input type="number" name="rating" min="1" max="5" required value="<%= userRating || '' %>" />
+
+      <label for="watchedTime">Watched time (in seconds):</label>
+      <input type="number" name="watchedTime" value="65" required />
+
+      <button type="submit">Submit Rating</button>
+    </form>
+
+    <% if (userRating) { %>
+      <div class="previous-rating">
+        ⭐ You previously rated this movie: <%= userRating %> / 5
+        <div class="star-display">
+          <% for (let i = 1; i <= 5; i++) { %>
+            <span class="<%= i <= userRating ? 'filled' : '' %>">&#9733;</span>
+          <% } %>
+        </div>
+      </div>
+    <% } %>
+
+    <% if (rated) { %>
+      <script>
+        alert("✅ Rating saved successfully!");
+        window.location.href = "/userDashboard?rated=success";
+      </script>
+    <% } %>
+  </div>
+</body>
+</html>

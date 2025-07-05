@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Recommended Movies for User <%= userId %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 30px;
+    }
+
+    .movie-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      padding: 10px;
+    }
+
+    .movie-card {
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      transition: transform 0.3s ease;
+    }
+
+    .movie-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .movie-card h3 {
+      margin-top: 0;
+      color: #2980b9;
+    }
+
+    .movie-card p {
+      margin: 8px 0;
+    }
+
+    .watch-btn {
+      display: inline-block;
+      padding: 10px 15px;
+      background-color: #27ae60;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      margin-top: 10px;
+      transition: background-color 0.2s ease;
+    }
+
+    .watch-btn:hover {
+      background-color: #1e8449;
+    }
+
+    @media screen and (max-width: 600px) {
+      .movie-card {
+        padding: 15px;
+      }
+
+      h1 {
+        font-size: 22px;
+      }
+
+      .watch-btn {
+        padding: 8px 12px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+    
+  <h1>Recommended Movies for User ID: <%= userId %></h1>
+
+  <% if (movies.length === 0) { %>
+    <p style="text-align: center;">No recommendations available at the moment.</p>
+  <% } else { %>
+    <div class="movie-container">
+      <% movies.forEach(movie => { %>
+        <div class="movie-card">
+    
+          <!-- <p><strong>Genre:</strong> <%= movie.genre %></p>
+          <% if (movie.language) { %>
+            <p><strong>Language:</strong> <%= movie.language %></p>
+          <% } %>
+          <a href="/watch/<%= movie.movie_id %>" class="watch-btn">▶ Watch Movie</a> -->
+           <h3><%= movie.title %></h3>
+                <p><%= movie.genre %></p>
+                <a href="<%= movie.movie_url %>" target="_blank" class="watch-btn">▶️ Watch Now</a>
+
+                <!-- Remove from Watchlist Form -->
+                <form action="/watchlistpage/watchlist/remove" method="POST" onclick="return confirm('Are you sure you wnat to Remove this movie From the Watchlist..')">
+                  <input type="hidden" name="movie_id" value="<%= movie.movie_id %>">
+                  <button type="submit" class="remove-btn">🗑️ Remove</button>
+                </form>
+        </div>
+      <% }); %>
+    </div>
+  <% } %>
+</body>
+</html>

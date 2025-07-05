@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Login Page</title>
+      <style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-image:url('/image/download.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+
+  }
+  
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 50px;
+    /* background-color: rgba(255, 255, 255, 0.85); */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .logo {
+    font-size: 28px;
+    font-weight: bold;
+    margin: 0;
+    color: red;
+  }
+
+  .logo span {
+    color: royalblue;
+  }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 25px;
+    margin-left: 300px;
+    padding: 10;
+    margin-top:-30px;
+  }
+
+  nav ul li a {
+    text-decoration: none;
+    color:red;
+    font-weight: bold;
+    font-size: 16px;
+    transition: color 0.3s ease;
+    padding:20px;
+  }
+
+  nav ul li a:hover {
+    color: royalblue;
+  }
+
+  /* Optional: Add this if you want items centered below the navbar */
+  .content {
+    text-align: center;
+    margin-top: 100px;
+    color: white;
+  }
+  
+</style>
+
+     <!-- <link rel="stylesheet" href="./css/style.css">  -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+</head>
+<body>
+  <nav>
+            <h2 class="logo" style="color:rgb(114, 210, 62);">Film<span>Fusion</span></h2>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/loginpage">Login</a></li>
+                <li><a href="/registration">Register</a></li>
+                <li><a href="/aboutus">About Us</a></li>
+                <li><a href="/services">Services</a></li>
+            </ul>
+        </nav>
+    <body class="bg-light">
+     
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card shadow">
+          <div class="card-header text-center">
+            <h3>Login</h3>
+          </div>
+          <div class="card-body">
+            <form action="/login" method="POST">
+             <div class="mb-3">
+               <label for="loginEmail" class="form-label">Email address</label>
+               <input type="email" class="form-control" id="loginEmail" name="email" required>
+             </div>
+             <div class="mb-3">
+                <label for="loginPassword" class="form-label">Password</label>
+                <input type="password" class="form-control" id="loginPassword" name="password" required>
+             </div>
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+          </form>
+
+          </div>
+          <div class="card-footer text-center">
+            <small>Don't have an account? <a href="/registration">Register here</a></small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% if (typeof msg !== "undefined") { %>
+    <p style="color: green; font-size: 20px; font-weight: bold; margin-top: 20px; text-align: center;"><%= msg %></p>
+<% } %>
+
+          
+</body>
+
+</body>
+</html>

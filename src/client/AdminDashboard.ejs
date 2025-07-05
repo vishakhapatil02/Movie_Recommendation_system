@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <style>
+    :root {
+      --sidebar-width: 250px;
+      --navbar-height: 60px;
+      --primary-color: #343a40;
+      --accent-color: #1c2950;
+      --text-light: rgba(255, 255, 255, 0.9);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: 'Nunito', sans-serif;
+      background-color: #f8f9fc;
+    }
+
+    body {
+      overflow-x: hidden;
+    }
+
+    /* Navbar */
+    #navbar {
+      height: var(--navbar-height);
+      width: 100%;
+      background-color: #0b1a39;
+      color: white;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1001;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      box-shadow: 0 0.15rem 1.75rem rgba(0, 0, 0, 0.1);
+    }
+
+    /* Sidebar */
+    #sidebar {
+      width: var(--sidebar-width);
+      height: 100vh;
+      background: linear-gradient(180deg, var(--primary-color) 10%, var(--accent-color) 100%);
+      position: fixed;
+      top: var(--navbar-height);
+      left: 0;
+      padding-top: 1rem;
+      z-index: 1000;
+      overflow-y: auto;
+    }
+
+    .sidebar-link {
+      display: block;
+      padding: 12px 20px;
+      color: var(--text-light);
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+
+    .sidebar-link:hover,
+    .sidebar-link.active {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    /* Main content */
+    #main-content {
+      margin-left: var(--sidebar-width);
+      margin-top: var(--navbar-height);
+      padding: 30px 20px;
+      min-height: calc(100vh - var(--navbar-height));
+      transition: margin 0.3s ease;
+    }
+
+    .card {
+      border: none;
+      border-radius: 0.5rem;
+      box-shadow: 0 0.15rem 1.75rem rgba(58, 59, 69, 0.1);
+    }
+
+    .card .card-header {
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    .display-4 {
+      font-size: 2.5rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      #sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        top: 0;
+      }
+
+      #main-content {
+        margin-left: 0;
+        margin-top: calc(var(--navbar-height) + 20px);
+      }
+
+      #navbar {
+        height: auto;
+        padding: 10px 15px;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div id="navbar">
+    <h5 class="m-0">Admin Dashboard</h5>
+  </div>
+
+  <!-- Sidebar -->
+  <div id="sidebar">
+    <a href="/adminDashboard" class="sidebar-link">Dashboard</a>
+    <a href="/movies/add" class="sidebar-link menu-link" data-type="ajax">Add New Movies</a>
+    <a href="/movies/viewMovies" class="sidebar-link menu-link" data-type="ajax">View All Movies</a>
+    <a href="/userlist" class="sidebar-link menu-link" data-type="ajax">User Details</a>
+    <a href="/movies/logoutAdmin" class="sidebar-link" onclick="return confirmLogout()">Logout</a>
+  </div>
+
+  <!-- Main Content -->
+  <div id="main-content">
+    <div id="dashboard-box">
+      <h2 class="text-center mb-5">Welcome, Admin!</h2>
+      <div class="row justify-content-center">
+
+        <!-- Total Users Card -->
+        <div class="col-md-5 mb-4">
+          <div class="card text-white bg-primary">
+            <div class="card-header text-center">Total Users</div>
+            <div class="card-body text-center">
+              <h5 class="display-4"><%= typeof totalUsers !== 'undefined' ? totalUsers : 0 %></h5>
+              <p>Registered Users</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Login Attempts Card -->
+        <div class="col-md-5 mb-4">
+          <div class="card text-white bg-success">
+            <div class="card-header text-center">Login Attempts</div>
+            <div class="card-body text-center">
+              <h5 class="display-4"><%= typeof totalLogins !== 'undefined' ? totalLogins : 0 %></h5>
+              <p>Overall Login Attempts</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- AJAX Injected Content -->
+    <div id="content-box"></div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    document.querySelectorAll(".menu-link").forEach(link => {
+      link.addEventListener("click", function (e) {
+        e.preventDefault();
+        const url = this.getAttribute("href");
+        const type = this.getAttribute("data-type");
+
+        if (type === "home") {
+          document.getElementById("dashboard-box").style.display = "block";
+          document.getElementById("content-box").innerHTML = "";
+        } else {
+          document.getElementById("dashboard-box").style.display = "none";
+          fetch(url)
+            .then(res => res.text())
+            .then(data => {
+              document.getElementById("content-box").innerHTML = data;
+            })
+            .catch(err => {
+              document.getElementById("content-box").innerHTML = "<p class='text-danger'>Error loading content.</p>";
+            });
+        }
+      });
+    });
+
+    function confirmLogout() {
+      return confirm("Are you sure you want to logout?");
+    }
+  </script>
+</body>
+</html>

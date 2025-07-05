@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Edit Movie</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <%-include('adminDashboard')%>
+<div class="container mt-5">
+  <h2>Edit Movie</h2>
+  <form method="POST" action="/movies/updatemovies/<%= movie.movie_id %>">
+    <div class="mb-3">
+      <label class="form-label">Title</label>
+      <input type="text" name="title" value="<%= movie.title %>" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Description</label>
+      <textarea name="description" class="form-control"><%= movie.description %></textarea>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Release Date</label>
+      <input type="date" name="release_date" value="<%= movie.release_date.toISOString().split('T')[0] %>" class="form-control">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Genre</label>
+      <input type="text" name="genre" value="<%= movie.genre %>" class="form-control">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Director</label>
+      <input type="text" name="director" value="<%= movie.director %>" class="form-control">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Language</label>
+      <input type="text" name="language" value="<%= movie.language %>" class="form-control">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Country</label>
+      <input type="text" name="country" value="<%= movie.country %>" class="form-control">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Budget</label>
+      <input type="number" step="0.01" name="budget" value="<%= movie.budget %>" class="form-control">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Revenue</label>
+      <input type="number" step="0.01" name="revenue" value="<%= movie.revenue %>" class="form-control">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Runtime (minutes)</label>
+      <input type="number" name="runtime" value="<%= movie.runtime %>" class="form-control">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Poster URL</label>
+      <input type="text" name="poster_url" value="<%= movie.poster_url %>" class="form-control">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Trailer URL</label>
+      <input type="text" name="trailer_url" value="<%= movie.trailer_url %>" class="form-control">
+    </div>
+    <button type="submit" class="btn btn-success">Update Movie</button>
+  </form>
+</div>
+</body>
+</html>

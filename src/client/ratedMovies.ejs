@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Rated Movies</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f4f6f9;
+      color: #333;
+      height: 100vh;
+    }
+
+    .dashboard {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .sidebar {
+      width: 240px;
+      background-color: #1f1f2e;
+      color: #fff;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar h2 {
+      color: #fff;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .sidebar a {
+      color: #ccc;
+      text-decoration: none;
+      margin-bottom: 15px;
+      padding: 10px 15px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sidebar a:hover,
+    .sidebar a.active {
+      background-color: #333950;
+      color: #fff;
+    }
+
+    .main {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      height: 60px;
+      background-color: #fff;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .profile-dropdown {
+      position: relative;
+    }
+
+    .profile-btn {
+      border: none;
+      background: none;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .profile-btn .material-icons {
+      font-size: 36px;
+      color: #555;
+    }
+
+    .profile-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 110%;
+      background: white;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+      padding: 10px;
+      min-width: 180px;
+      z-index: 10;
+      border-radius: 6px;
+    }
+
+    .profile-dropdown:focus-within .profile-content,
+    .profile-dropdown:hover .profile-content {
+      display: block;
+    }
+
+    .logout-btn {
+      margin-top: 8px;
+      padding: 6px 12px;
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .content-area {
+      padding: 30px;
+      overflow-y: auto;
+      background-color: #f9f9fb;
+      flex-grow: 1;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-bottom: 25px;
+      color: #2c3e50;
+    }
+
+    .movie-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 25px;
+    }
+
+    .movie-card {
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      transition: transform 0.3s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .movie-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .movie-card img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+    }
+
+    .card-body {
+      padding: 15px;
+      flex-grow: 1;
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #2c3e50;
+    }
+
+    .card-body p {
+      font-size: 14px;
+      color: #555;
+      margin: 4px 0;
+    }
+
+    .btn-edit {
+      font-size: 14px;
+      margin-top: 10px;
+      padding: 6px 10px;
+      border: 1px solid #3498db;
+      background-color: transparent;
+      color: #3498db;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-edit:hover {
+      background-color: #3498db;
+      color: white;
+    }
+
+    .no-rating {
+      font-size: 16px;
+      color: #777;
+      margin-top: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <h2>🎬 MyMovies</h2>
+      <a href="/userDashboard" class="nav-link"><span class="material-icons">video_library</span>Recommendations</a>
+      <a href="/watchlistpage/watlistmovies" class="nav-link"><span class="material-icons">stars</span><%= user.name %>'s Watchlist</a>
+      <a href="/liked" class="nav-link"><span class="material-icons">favorite</span>Liked Movies</a>
+      <a href="/ratedmovies" class="nav-link active"><span class="material-icons">star</span>Rated Movies</a>
+      <a href="/recent" class="nav-link"><span class="material-icons">history</span>Recently Watched</a>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main">
+      <!-- Topbar -->
+      <header class="topbar">
+        <div></div> <!-- Empty space for future search bar if needed -->
+        <div class="profile-dropdown" tabindex="0">
+          <button class="profile-btn">
+            <span class="material-icons">account_circle</span>
+            <%= user.name %>
+          </button>
+          <div class="profile-content">
+            <p><strong><%= user.name %></strong></p>
+            <p><%= user.email %></p>
+            <form action="/logout" method="POST" onsubmit="return confirm('Are you sure you want to logout?');">
+              <button class="logout-btn" type="submit">Logout</button>
+            </form>
+          </div>
+        </div>
+      </header>
+
+      <!-- Content -->
+      <main class="content-area">
+        <h2>Hello <%= user.name %>, here are your rated movies:</h2>
+
+        <% if (ratedMovies.length > 0) { %>
+          <div class="movie-grid">
+            <% ratedMovies.forEach(movie => { %>
+              <div class="movie-card">
+                <img src="<%= movie.poster_url %>" alt="Movie Poster">
+                <div class="card-body">
+                  <h5 class="card-title"><%= movie.title %></h5>
+                  <p><strong>Your Rating:</strong> ⭐ <%= movie.rating %>/5</p>
+                  <p><%= movie.genre %> | Directed by <%= movie.director %></p>
+                  <a href="/movies/rate/<%= movie.movie_id %>" class="btn-edit">Edit Rating</a>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+        <% } else { %>
+          <p class="no-rating">⚠️ You haven’t rated any movies yet.</p>
+        <% } %>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

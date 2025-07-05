@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="../client/css/ratingstar.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <title>User Dashboard - Movie Recommendation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <style>
+  :root {
+    --sidebar-width: 240px;
+    --navbar-height: 60px;
+    --primary-color: #343a40;
+    --accent-color: #1c2950;
+    --text-light: rgba(255, 255, 255, 0.9);
+    --bg-color: #f8f9fc;
+    --card-shadow: rgba(58, 59, 69, 0.1);
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Nunito', sans-serif;
+    background-color: var(--bg-color);
+    color: #333;
+    overflow-x: hidden;
+  }
+
+  .dashboard {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .sidebar {
+    width: var(--sidebar-width);
+    background: linear-gradient(180deg, var(--primary-color) 10%, var(--accent-color) 100%);
+    color: var(--text-light);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar h2 {
+    text-align: center;
+    color: #fff;
+    margin-top: 20px;
+    font-size: 1.5em;
+  }
+
+  .nav-link {
+    color: var(--text-light);
+    text-decoration: none;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: background 0.3s;
+  }
+
+  .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+  }
+
+  .main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .topbar {
+    height: var(--navbar-height);
+    background-color: #0b1a39;
+    color: white;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #ddd;
+    box-shadow: 0 0.15rem 1.75rem var(--card-shadow);
+  }
+
+  .search-input {
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    border-radius: 4px;
+    width: 300px;
+  }
+
+  .profile-dropdown {
+    position: relative;
+  }
+
+  .profile-btn {
+    border: none;
+    background: none;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #fff;
+  }
+
+  .profile-btn .material-icons {
+    font-size: 40px;
+    color: #fff;
+  }
+
+  .profile-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 110%;
+    background: white;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    min-width: 180px;
+    z-index: 10;
+    border-radius: 6px;
+  }
+
+  .profile-dropdown:focus-within .profile-content,
+  .profile-dropdown:hover .profile-content {
+    display: block;
+  }
+
+  .logout-btn {
+    margin-top: 8px;
+    padding: 6px 12px;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  .content-area {
+    padding: 20px;
+    overflow-y: auto;
+    background-color: var(--bg-color);
+    flex-grow: 1;
+  }
+
+  .movie-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+  }
+
+  .movie-card {
+    position: relative;
+    width: calc(100% / 6 - 20px);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px var(--card-shadow);
+    background: #fff;
+  }
+
+  .poster-wrapper {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    border-radius: 10px 10px 0 0;
+  }
+
+  .movie-poster {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: 0.3s ease;
+  }
+
+  .overlay {
+    position: absolute;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    width: 100%;
+    padding: 12px;
+    transition: 0.3s ease;
+    opacity: 0;
+    transform: translateY(100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .movie-card:hover .overlay {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .movie-title {
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .overlay-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .overlay-buttons .btn {
+    padding: 8px 12px;
+    font-size: 13px;
+    border: none;
+    background: #ffffff;
+    color: #000;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .overlay-buttons .btn:hover {
+    background: #e2e2e2;
+  }
+
+  .overlay-buttons form {
+    margin: 0;
+    width: 100%;
+  }
+
+  .overlay-buttons form button {
+    width: 100%;
+  }
+
+  #videoModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.9);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    flex-direction: column;
+  }
+
+  #videoModal iframe {
+    width: 80%;
+    height: 80%;
+    border: none;
+    border-radius: 10px;
+  }
+
+  #videoModal button {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    background: red;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+
+  @media (max-width: 768px) {
+    .sidebar {
+      position: relative;
+      width: 100%;
+      height: auto;
+      top: 0;
+    }
+
+    .main {
+      margin-left: 0;
+      margin-top: calc(var(--navbar-height) + 20px);
+    }
+
+    .topbar {
+      height: auto;
+      padding: 10px 15px;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .movie-card {
+      width: calc(100% / 2 - 20px);
+    }
+  }
+</style>
+
+</head>
+
+<body>
+<div class="dashboard">
+  <nav class="sidebar">
+    <h2>🎮 MyMovies</h2>
+    <a href="/userDashboard" class="nav-link"><span class="material-icons">video_library</span>Recommendations</a>
+    <a href="/watchlistpage/watlistmovies" class="nav-link active"><span class="material-icons">stars</span><span><%= user.name %>'s Watchlist</span></a>
+    <a href="/liked" class="nav-link"><span class="material-icons">favorite</span> Liked Movies</a>
+    <a href="/ratedmovies" class="nav-link">
+  <span class="material-icons">star</span> Rated Movies
+</a>
+
+    <a href="#" class="nav-link"><span class="material-icons">history</span> Recently Watched</a>
+    <a href="/recommendations/<%= user.user_id %>" class="nav-link">
+  <span class="material-icons">video_library</span>Recommended Movies
+</a>
+
+
+  </nav>
+
+  <div class="main">
+    <header class="topbar">
+      <form action="/ajax/search" method="GET">
+        <input type="text" name="query" class="search-input" placeholder="Search by title, genre, director or language" oninput="liveSearch(this.value)" autocomplete="off" />
+      </form>
+      <% if (user) { %>
+      <div class="profile-dropdown" tabindex="0">
+        <button class="profile-btn">
+          <span class="material-icons">account_circle</span>
+          <%= user.name %>
+        </button>
+        <div class="profile-content">
+          <p><strong><%= user.name %></strong></p>
+          <p><%= user.email %></p>
+          <form action="/logout" method="POST" onsubmit="return confirm('Are you sure you want to logout the account?');">
+            <button class="logout-btn" type="submit">Logout</button>
+          </form>
+        </div>
+      </div>
+      <% } %>
+    </header>
+
+    <main class="content-area">
+     <main class="content-area">
+
+  <!-- Genre filter buttons -->
+  <div class="genre-filters mb-4">
+    <h4>Select Category:</h4>
+    <% ["Action", "Comedy", "Drama", "Horror", "Love story", "Sci-Fi", "Thriller"].forEach(g => { %>
+      <a href="/getrecommendation?genre=<%= g %>" class="btn btn-outline-dark m-1">
+        <%= g %>
+      </a>
+    <% }) %>
+  </div>
+
+  <% if (typeof genreSelected !== 'undefined') { %>
+    <h4>Showing "<%= genreSelected %>" Recommendations</h4>
+  <% } else if (typeof query !== 'undefined' && query) { %>
+    <h3>Showing results for "<%= query %>"</h3>
+    <p>Search results based on title, genre, director, or language.</p>
+  <% } else { %>
+    <h3>Welcome to your dashboard</h3>
+    <p>Your personalized movie recommendations will appear here.</p>
+  <% } %>
+
+  <div class="movie-grid" id="searchResults">
+        <% if (movies && movies.length > 0) { %>
+          <% movies.forEach((movie) => { 
+              let embedUrl = movie.movie_url;
+              if (embedUrl && embedUrl.includes("youtube.com/watch?v=")) {
+                embedUrl = embedUrl.replace("watch?v=", "embed/");
+              }
+          %>
+            <div class="movie-card">
+              <div class="poster-wrapper">
+                <img src="<%= movie.poster_url %>" class="movie-poster" alt="Movie Poster">
+                <div class="overlay">
+                  <h5 class="movie-title"><%= movie.title %></h5>
+                  <div class="overlay-buttons">
+                    <a href="<%= movie.trailer_url %>" target="_blank" class="btn">Trailer</a>
+
+                    <!-- <button onclick="handleWatchMovie('<%- embedUrl %>', <%= movie.movie_id %>)" class="btn">Watch Movie</button> -->
+
+                    <button class="btn" onclick="openMovie('<%= movie.movie_url %>')">Watch Movie</button>
+                    <form action="/watchlistpage/addWatchlist" method="POST">
+                      <input type="hidden" name="movie_id" value="<%= movie.movie_id %>">
+                      <button type="submit" class="btn btn-primary">Add to Watchlist</button>
+                    </form>
+                    <a href="#" class="btn" onclick="goToRatingPage('<%= movie.movie_id %>')">Rating</a>
+                    <form action="/like" method="POST">
+                      <input type="hidden" name="movie_id" value="<%= movie.movie_id %>">
+                      <button type="submit" class="btn btn-danger">❤️ Like</button>
+                    </form>
+                    <!-- <div class="user-rating">
+                      <% const rating = movie.userRating || 0; %>
+                      <% for (let i = 1; i <= 5; i++) { %>
+                        <span class="star <%= i <= rating ? 'filled' : '' %>">&#9733;</span>
+                      <% } %>
+                      <% if (rating > 0) { %>
+                        <p style="font-size: 14px; color: #fff; margin-top: 4px;">You rated: <%= rating %>/5</p>
+                      <% } else { %>
+                        <p style="font-size: 14px; color: #ccc; margin-top: 4px;">Not rated yet</p>
+                      <% } %>
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% }); %>
+        <% } else { %>
+          <p>No movies available.</p>
+        <% } %>
+      </div>
+    </main>
+  </div>
+</div>
+<% if (typeof msg !== 'undefined') { %>
+  <div class="alert alert-success"><%= msg %></div>
+<% } %>
+
+<!-- Video Modal -->
+<div id="videoModal">
+  <button onclick="closeModal()">Close</button>
+  <iframe id="videoFrame" allowfullscreen></iframe>
+</div>
+
+<script>
+
+  function handleWatchMovie(movieUrl, movieId) {
+    const modal = document.getElementById("videoModal");
+    const frame = document.getElementById("videoFrame");
+    frame.src = movieUrl;
+    modal.style.display = "flex";
+    localStorage.setItem("movieId", movieId);
+    localStorage.setItem("watchStartTime", Date.now());
+  }
+
+  function closeModal() {
+    const modal = document.getElementById("videoModal");
+    const frame = document.getElementById("videoFrame");
+    frame.src = "";
+    modal.style.display = "none";
+    const endTime = Date.now();
+    const startTime = parseInt(localStorage.getItem("watchStartTime"), 10);
+    localStorage.setItem("watchedTime", Math.floor((endTime - startTime) / 1000));
+  }
+
+  // function goToRatingPage(movieId) {
+  //   const watched = localStorage.getItem("watchedTime");
+  //   if (!watched || parseInt(watched, 10) < 60) {
+  //     alert("⏳ Please watch the movie for at least 1 minute before rating.");
+  //     return;
+  //   }
+  //   window.location.href = `/movies/rate/${movieId}`;
+  // }
+  function goToRatingPage(movieId) {
+  const watched = localStorage.getItem("watchedTime");
+
+  if (!watched || parseInt(watched, 10) < 60) {
+    alert("⏳ Please watch the movie for at least 1 minute before rating.");
+    return;
+  }
+
+  //  Correct route
+  window.location.href = `/rating/${movieId}`;
+}
+
+  function openMovie(url) {
+    const modal = document.getElementById("videoModal");
+    const frame = document.getElementById("videoFrame");
+
+    if (url.includes("youtube.com/watch")) {
+      const videoId = new URL(url).searchParams.get("v");
+      url = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+    }
+
+    frame.src = url;
+    modal.style.display = "flex";
+  }
+
+  function closeModal() {
+    document.getElementById("videoModal").style.display = "none";
+    document.getElementById("videoFrame").src = "";
+  }
+
+  const resultsContainer = document.getElementById("searchResults");
+  const loader = document.createElement("p");
+  loader.textContent = "🔄 Loading...";
+  loader.style.textAlign = "center";
+  loader.style.fontWeight = "bold";
+
+  let debounceTimeout;
+  function liveSearch(query) {
+    clearTimeout(debounceTimeout);
+    debounceTimeout = setTimeout(() => {
+      if (query.trim().length === 0) {
+        location.reload();
+        return;
+      }
+      resultsContainer.innerHTML = "";
+      resultsContainer.appendChild(loader);
+      fetch(`/ajax/search?query=${encodeURIComponent(query)}`)
+        .then(res => res.json())
+        .then(data => {
+          resultsContainer.innerHTML = "";
+          if (!data || data.length === 0) {
+            resultsContainer.innerHTML = "<p style='text-align:center;'>🚫 No results found.</p>";
+            return;
+          }
+          data.forEach(movie => {
+            const card = `
+              <div class="movie-card">
+                <div class="poster-wrapper">
+                  <img src="${movie.poster_url}" class="movie-poster" alt="Movie Poster">
+                  <div class="overlay">
+                    <h5 class="movie-title">${movie.title}</h5>
+                    <div class="overlay-buttons">
+                      <a href="${movie.trailer_url}" target="_blank" class="btn">Trailer</a>
+                      <button class="btn" onclick="openMovie('${movie.movie_url}')">Watch Movie</button>
+                      <form action="/watchlistpage/addWatchlist" method="POST">
+                        <input type="hidden" name="movie_id" value="${movie.movie_id}">
+                        <button type="submit" class="btn btn-primary">Add to Watchlist</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>`;
+            resultsContainer.innerHTML += card;
+          });
+        })
+        .catch(() => {
+          resultsContainer.innerHTML = "<p style='text-align:center;'>❌ Something went wrong.</p>";
+        });
+    }, 400);
+
+  }
+</script>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const likedStatus = params.get("liked");
+
+  if (likedStatus) {
+    const toast = new bootstrap.Toast(document.getElementById('likeToast'));
+    const message = document.getElementById('likeToastMessage');
+
+    if (likedStatus === "true") {
+      message.textContent = "✅ Movie liked successfully!";
+      document.getElementById('likeToast').classList.replace("bg-danger", "bg-success");
+    } else if (likedStatus === "exists") {
+      message.textContent = "⚠️ You already liked this movie.";
+      document.getElementById('likeToast').classList.replace("bg-success", "bg-warning");
+    } else if (likedStatus === "error") {
+      message.textContent = "❌ Failed to like the movie.";
+      document.getElementById('likeToast').classList.replace("bg-success", "bg-danger");
+    }
+
+    toast.show();
+
+    // Optional: Clean URL so toast doesn't re-show on refresh
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+</script>
+
+
+
+<div id="videoModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; justify-content:center; align-items:center;">
+  <div style="position:relative; width:90%; max-width:960px; background:#000;">
+    <button onclick="closeModal()" style="position:absolute; top:10px; right:10px; background:red; color:white; border:none; font-size:20px; cursor:pointer;">✖</button>
+    <iframe id="videoFrame" src="" frameborder="0" allowfullscreen style="width:100%; height:500px;"></iframe>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 9999;">
+  <div id="likeToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body" id="likeToastMessage">Movie liked successfully!</div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  </div>
+</div>
+<!-- Rating Toast -->
+<div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 9999;">
+
+  <div id="ratingToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body" id="ratingToastMessage">Rating submitted successfully!</div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  </div>
+</div>
+<script>
+  // For Rating Toast
+  const ratedStatus = new URLSearchParams(window.location.search).get("rated");
+
+  if (ratedStatus === "success") {
+    const toast = new bootstrap.Toast(document.getElementById('ratingToast'));
+    document.getElementById('ratingToastMessage').textContent = "✅ Rating submitted successfully!";
+    toast.show();
+
+    // Optional: Remove the query param after showing message
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+</script>
+
+</body>
+</html>

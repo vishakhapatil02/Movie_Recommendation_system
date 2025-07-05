@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Edit Movie</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f2f5;
+      margin: 0;
+      padding: 0;
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-top: 30px;
+    }
+
+    form {
+      max-width: 600px;
+      margin: 30px auto;
+      background-color: #fff;
+      padding: 25px 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+      color: #555;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="number"],
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin-top: 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+      margin-right: 10px;
+    }
+
+    button[type="button"] {
+      background-color: #f44336;
+      color: white;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+  <h2>Edit Movie Details</h2>
+
+  <form action="/movies/updatemovie/<%= movie.movie_id %>" method="POST">
+    
+    <label>Title:</label>
+    <input type="text" name="title" value="<%= movie.title %>" required>
+
+    <label>Description:</label>
+    <textarea name="description" rows="4" required><%= movie.description %></textarea>
+
+    <label>Release Date:</label>
+    <input type="date" name="release_date" value="<%= movie.release_date.toISOString().split('T')[0] %>" required>
+
+    <label>Genre:</label>
+    <input type="text" name="genre" value="<%= movie.genre %>" required>
+
+    <label>Director:</label>
+    <input type="text" name="director" value="<%= movie.director %>" required>
+
+    <label>Language:</label>
+    <input type="text" name="language" value="<%= movie.language %>" required>
+
+    <label>Country:</label>
+    <input type="text" name="country" value="<%= movie.country %>" required>
+
+    <label>Budget:</label>
+    <input type="number" name="budget" value="<%= movie.budget %>" required>
+
+    <label>Revenue:</label>
+    <input type="number" name="revenue" value="<%= movie.revenue %>" required>
+
+    <label>Runtime (in minutes):</label>
+    <input type="number" name="runtime" value="<%= movie.runtime %>" required>
+
+    <label>Poster URL:</label>
+    <input type="text" name="poster_url" value="<%= movie.poster_url %>">
+
+    <label>Trailer URL:</label>
+    <input type="text" name="trailer_url" value="<%= movie.trailer_url %>">
+
+    <label>Movie URL:</label>
+    <input type="text" name="movie_url" value="<%= movie.movie_url %>">
+
+    <button type="submit">Update Movie</button>
+    <button type="button" onclick="window.location.href='/movies/viewMovies'">Cancel</button>
+  </form>
+</body>
+</html>
