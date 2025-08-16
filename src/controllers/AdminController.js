@@ -11,8 +11,4 @@ exports.logoutAdmin = (req, res) => {
   });
 };
 
-<<<<<<< HEAD
-//dddd
-=======
-//dddd
->>>>>>> 0a5e8f9e2d7761c65628976b4c29cc336443434b
+//dd
